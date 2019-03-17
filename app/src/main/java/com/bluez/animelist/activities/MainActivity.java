@@ -1,5 +1,6 @@
 package com.bluez.animelist.activities;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,14 +31,28 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<Anime> animeList;
 
+    SwipeRefreshLayout swipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        swipe = findViewById(R.id.swipe);
+        swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                swipe.setRefreshing(true);
+                jsonRequest();
+            }
+        });
+
         recyclerView = findViewById(R.id.recycler_view_id);
         animeList = new ArrayList<>();
+
         jsonRequest();
+        swipe.setRefreshing(false);
     }
 
     private void jsonRequest() {
